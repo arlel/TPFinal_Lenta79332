@@ -92,7 +92,7 @@ cajaParamMostarDesde.place(x=790, y=10)
 lblParamMostarDesde.place(x=675, y=10)
 
 cajaParamIteraciones = tk.Entry(p1, width=10)
-cajaParamIteraciones.insert(0, 360)
+cajaParamIteraciones.insert(0, 365)
 lblParamIteraciones = tk.Label(p1, text="cantidad a mostrar:")
 cajaParamIteraciones.place(x=1010, y=10)
 lblParamIteraciones.place(x=870, y=10)
