@@ -86,11 +86,13 @@ cajaParamStockInicial.place(x=375, y=10)
 lblParamStockInicial.place(x=275, y=10)
 
 cajaParamMostarDesde = tk.Entry(p1, width=10)
+cajaParamMostarDesde.insert(0, 0)
 lblParamMostarDesde = tk.Label(p1, text="Mostrar desde:")
 cajaParamMostarDesde.place(x=790, y=10)
 lblParamMostarDesde.place(x=675, y=10)
 
 cajaParamIteraciones = tk.Entry(p1, width=10)
+cajaParamIteraciones.insert(0, 360)
 lblParamIteraciones = tk.Label(p1, text="cantidad a mostrar:")
 cajaParamIteraciones.place(x=1010, y=10)
 lblParamIteraciones.place(x=870, y=10)
@@ -105,7 +107,7 @@ comboPolitica = ttk.Combobox(p1, state="readonly", postcommand=habilitarBoton)
 comboPolitica.place(x=500, y=12)
 comboPolitica["values"] = gestor.cargarPoliticas()
 # Treeview Resolucion del ejercicio
-headerMonteCarlo = ["Dia", "RND Demanda", "Demanda", "Stock",
+headerMonteCarlo = [" Dia ", "RND Demanda", "Demanda", "Stock",
                     "Dia pedido reposicion", "RND Demora", "Demora",
                     "Dia Restock", "AC Demanda(P.B.)",
                     "Costo Almacenamiento", "Costo Faltante",
