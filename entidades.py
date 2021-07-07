@@ -164,3 +164,13 @@ class Fila:
     def estadisticas(self):
         self.acumuladorCosto += self.costoTotalDia
         self.promedioCostoPorDia = self.acumuladorCosto / self.dia
+
+    def getPolitica(self):
+        return self.politica
+
+    def getPromedioCostoPorDia(self):
+        return self.promedioCostoPorDia
+
+    def getDia(self):
+        return self.dia
+

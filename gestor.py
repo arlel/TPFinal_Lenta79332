@@ -5,8 +5,6 @@ import entidades as entity
 global fila
 
 politicas = []
-cantidadDiasSimulacion = 360
-stockInicial = 20
 fila = entity.Fila(0, "null")
 
 
@@ -22,10 +20,10 @@ def cargarPoliticas():
     return salida
 
 
-def empezarSimulacion(politicaSeleccionada):
+def empezarSimulacion(politicaSeleccionada, stock):
     global fila
     politica = obtenerPolitica(politicaSeleccionada)
-    fila = entity.Fila(stockInicial, politica)
+    fila = entity.Fila(stock, politica)
     salida = mostrarFila(fila.mostrarFila())
     return salida
 
@@ -53,4 +51,15 @@ def calcularSiguienteFila():
     global fila
     fila = fila.calcularProximaFila()
     temp = mostrarFila(fila.mostrarFila())
+    return temp
+
+
+def toHistorial():
+    global fila
+    temp = agregarAlHistorial(fila)
+    return temp
+
+
+def agregarAlHistorial(fila):
+    temp = [fila.getPolitica().getNombre(), 0, fila.getDia(), round(fila.getPromedioCostoPorDia(),4)]
     return temp
