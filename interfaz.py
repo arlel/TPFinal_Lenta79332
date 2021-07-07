@@ -74,7 +74,7 @@ p2 = ttk.Frame(nb)
 # Interacciones y objetos
 # Parametros adicionales:
 cajaParamCantDias = tk.Entry(p1, width=10)
-cajaParamCantDias.insert(0, 360)
+cajaParamCantDias.insert(0, 365)
 lblParamStockInicial = tk.Label(p1, text="Cantidad de Dias")
 cajaParamCantDias.place(x=175, y=10)
 lblParamStockInicial.place(x=50, y=10)
