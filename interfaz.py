@@ -5,18 +5,26 @@ from tkinter import ttk
 mejorPolitica = ""
 costoMenor = 99999999999999999999999999
 # Metodos
+
+
 def btnSimularClick():
     cleanTable(treeResolucion)
     politicaSeleccionada = comboPolitica.get()
     stock = int(cajaParamStockInicial.get())
     dias = int(cajaParamCantDias.get())
+    desde = int(cajaParamMostarDesde.get())
+    hasta = int(cajaParamIteraciones.get())+desde
     # Segundo control, si no selecciono alguna politica, se desabilita el boton
     if politicaSeleccionada == "":
         botonSimular["state"] = "disabled"
         return
-    insertarFila(treeResolucion, gestor.empezarSimulacion(politicaSeleccionada, stock), 0)
-    for i in range(1, dias+1):
-        insertarFila(treeResolucion, gestor.calcularSiguienteFila(), i)
+    insertarFila(treeResolucion, gestor.empezarSimulacion(
+        politicaSeleccionada, stock), 0)
+    for i in range(1, dias):
+        filaSimulada = gestor.calcularSiguienteFila()
+        if i >= desde and i < hasta:
+            insertarFila(treeResolucion, filaSimulada, i)
+    insertarFila(treeResolucion, gestor.calcularSiguienteFila(), dias)
     temp = gestor.toHistorial()
     temp[1] = stock
     insertarFila(treeHistorial, temp, -1)
@@ -31,10 +39,10 @@ def evaluarResultado(v):
         mejorPolitica = v[0]
     actualizarResultado()
 
-def actualizarResultado():
-    lblResultadoPolitica["text"]=mejorPolitica
-    lblMenorCosto["text"]=costoMenor
 
+def actualizarResultado():
+    lblResultadoPolitica["text"] = mejorPolitica
+    lblMenorCosto["text"] = costoMenor
 
 
 def habilitarBoton():
@@ -74,16 +82,27 @@ lblParamStockInicial.place(x=50, y=10)
 cajaParamStockInicial = tk.Entry(p1, width=10)
 cajaParamStockInicial.insert(0, 20)
 lblParamStockInicial = tk.Label(p1, text="Stock Inicial")
-cajaParamStockInicial.place(x=450, y=10)
-lblParamStockInicial.place(x=350, y=10)
+cajaParamStockInicial.place(x=375, y=10)
+lblParamStockInicial.place(x=275, y=10)
 
-botonSimular = tk.Button(p1, text="Simular", padx=10, pady=5, command=btnSimularClick, state="disabled")
-botonSimular.place(x=900, y=10)
+cajaParamMostarDesde = tk.Entry(p1, width=10)
+lblParamMostarDesde = tk.Label(p1, text="Mostrar desde:")
+cajaParamMostarDesde.place(x=790, y=10)
+lblParamMostarDesde.place(x=675, y=10)
+
+cajaParamIteraciones = tk.Entry(p1, width=10)
+lblParamIteraciones = tk.Label(p1, text="cantidad a mostrar:")
+cajaParamIteraciones.place(x=1010, y=10)
+lblParamIteraciones.place(x=870, y=10)
+
+botonSimular = tk.Button(p1, text="Simular", padx=10,
+                         pady=5, command=btnSimularClick, state="disabled")
+botonSimular.place(x=1100, y=10)
 
 lblPolitica = tk.Label(p1, text="Politica: ")
-lblPolitica.place(x=550, y=10)
+lblPolitica.place(x=425, y=10)
 comboPolitica = ttk.Combobox(p1, state="readonly", postcommand=habilitarBoton)
-comboPolitica.place(x=620, y=12)
+comboPolitica.place(x=500, y=12)
 comboPolitica["values"] = gestor.cargarPoliticas()
 # Treeview Resolucion del ejercicio
 headerMonteCarlo = ["Dia", "RND Demanda", "Demanda", "Stock",
@@ -92,8 +111,8 @@ headerMonteCarlo = ["Dia", "RND Demanda", "Demanda", "Stock",
                     "Costo Almacenamiento", "Costo Faltante",
                     "Costo Adquisicion", "Costo Total DIA",
                     "AC Costo", "PROM costoPorDia"]
-treeResolucion = ttk.Treeview(p1, height=29, column=[f"#{cantidad}" for cantidad in range(1, len(headerMonteCarlo) + 1)]
-                              , show='headings')
+treeResolucion = ttk.Treeview(p1, height=29, column=[
+                              f"#{cantidad}" for cantidad in range(1, len(headerMonteCarlo) + 1)], show='headings')
 treeResolucion.place(x=15, y=50)
 
 for i in range(len(headerMonteCarlo)):
@@ -111,7 +130,7 @@ treeResolucion.configure(xscrollcommand=vsb.set)
 # Resultados:
 lblMejorPolitica = tk.Label(p2, text="Mejor politica:")
 lblResultadoPolitica = tk.Label(p2)
-lblCosto= tk.Label(p2, text="Costo:")
+lblCosto = tk.Label(p2, text="Costo:")
 lblMenorCosto = tk.Label(p2)
 lblMejorPolitica.place(x=100, y=20)
 lblResultadoPolitica.place(x=225, y=20)
@@ -119,13 +138,15 @@ lblCosto.place(x=400, y=20)
 lblMenorCosto.place(x=450, y=20)
 
 # tabla de historial
-headerResultadosPrevios = ["   Politica   ", "Stock Inicial", "Dias simulados", "Promedio costo por dia"]
-treeHistorial = ttk.Treeview(p2, height=29, column=[f"#{cantidad}" for cantidad in range(0, len(headerResultadosPrevios)+1)]
-                              , show='headings')
+headerResultadosPrevios = [
+    "   Politica   ", "Stock Inicial", "Dias simulados", "Promedio costo por dia"]
+treeHistorial = ttk.Treeview(p2, height=29, column=[f"#{cantidad}" for cantidad in range(
+    0, len(headerResultadosPrevios)+1)], show='headings')
 treeHistorial.place(x=300, y=50)
 
 for i in range(len(headerResultadosPrevios)):
-    treeHistorial.column("#" + str(i + 1), anchor=tk.CENTER, width=100, minwidth=len(headerResultadosPrevios[i]) * 8 + 5)
+    treeHistorial.column("#" + str(i + 1), anchor=tk.CENTER,
+                         width=100, minwidth=len(headerResultadosPrevios[i]) * 8 + 5)
     treeHistorial.heading("#" + str(i + 1), text=headerResultadosPrevios[i])
 vsbp2 = ttk.Scrollbar(p2, orient="vertical", command=treeHistorial.yview)
 vsbp2.pack(side='right', fill='y')
